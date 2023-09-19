@@ -167,3 +167,115 @@ AND date_of_birth BETWEEN '1940-01-01' AND '1969-12-31';
 SELECT first_name, last_name FROM directors
 WHERE nationality IN ('British', 'French', 'German')
 AND date_of_birth BETWEEN '1950-01-01' AND '1980-12-31';
+
+
+-- Ordering the results returned
+
+/*
+SELECT columnname2, columnname2 FROM tablename
+ORDER BY columnname;
+*/
+
+SELECT * FROM actors;
+
+SELECT first_name, last_name, date_of_birth FROM actors
+ORDER BY first_name;
+
+SELECT first_name, last_name, date_of_birth FROM actors
+ORDER BY first_name DESC;
+
+SELECT first_name, last_name, date_of_birth FROM actors
+ORDER BY first_name ASC;
+
+SELECT actor_id, first_name, last_name, date_of_birth FROM actors
+ORDER BY actor_id;
+
+SELECT actor_id, first_name, last_name, date_of_birth FROM actors
+ORDER BY actor_id DESC;
+
+SELECT actor_id, first_name, last_name, date_of_birth FROM actors
+ORDER BY date_of_birth;
+
+SELECT actor_id, first_name, last_name, date_of_birth FROM actors
+ORDER BY date_of_birth DESC;
+
+SELECT actor_id, first_name, last_name, date_of_birth FROM actors
+WHERE gender = 'F'
+ORDER BY date_of_birth DESC;
+
+-- Limiting the number of records returned
+
+/*
+SELECT columnname1, columnname2 FROM tablename
+LIMIT N;
+*/
+
+SELECT * FROM movie_revenues;
+
+SELECT * FROM movie_revenues
+ORDER BY domestic_takings
+LIMIT 5;
+
+SELECT * FROM movie_revenues
+ORDER BY revenue_id
+LIMIT 5 OFFSET 3;
+
+-- Using Fetch
+
+/*
+SELECT column1 FROM table1
+FETCH FIRST 1 ROW ONLY
+*/
+
+SELECT movie_id, movie_name FROM movies
+FETCH FIRST 1 ROW ONLY;
+
+SELECT movie_id, movie_name FROM movies
+FETCH FIRST 10 ROW ONLY;
+
+SELECT movie_id, movie_name FROM movies
+OFFSET 8 ROWS
+FETCH FIRST 10 ROW ONLY;
+
+-- Distinct value
+
+/*
+SELECT DISTINCT columnname FROM tablename;
+*/
+
+SELECT DISTINCT movie_lang FROM movies
+ORDER BY movie_lang;
+
+SELECT DISTINCT movie_lang, age_certificate FROM movies
+ORDER BY movie_lang;
+
+SELECT DISTINCT * FROM movies
+ORDER BY movie_lang;
+
+SELECT * FROM movies;
+
+-- Select the American directors ordered from oldest to youngest.
+SELECT * FROM directors
+WHERE nationality = 'American'
+ORDER BY date_of_birth;
+
+-- Return the distinct nationalities from the directors table.
+SELECT DISTINCT nationality FROM directors;
+
+-- Return the first names, last names and date of births of the 10 youngest female actors.
+SELECT first_name, last_name, date_of_birth FROM actors
+WHERE gender = 'F'
+ORDER BY date_of_birth DESC
+LIMIT 10;
+
+-- Deleting with NULL values
+
+/*
+SELECT * FROM tablename
+WHERE columnname IS NULL;
+
+SELECT * FROM tablename
+WHERE columnname IS NOT NULL;
+*/
+
+SELECT * FROM actors;
