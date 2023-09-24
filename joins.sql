@@ -179,3 +179,121 @@ GROUP BY d.first_name, d.last_name
 HAVING SUM(mr.domestic_takings) IS NOT NULL
 ORDER BY SUM(mr.domestic_takings) DESC
 LIMIT 1;
+
+-- Union: Return the union of the selected columns from both tables but duplicated values excluded.
+-- Must select same number of columns and corresponding columns must be compatible data type.
+
+/*
+SELECT column1, column2 FROM table1
+UNION
+SELECT column1, column2 FROM table2;
+*/
+
+SELECT first_name, last_name FROM directors
+UNION
+SELECT first_name, last_name FROM actors;
+
+
+SELECT first_name, last_name, date_of_birth FROM directors
+WHERE nationality = 'American'
+UNION
+SELECT first_name, last_name, date_of_birth FROM actors
+WHERE gender = 'F'
+ORDER BY first_name;
+
+-- Corresponding columns from both tables are not compatible.
+SELECT date_of_birth, last_name FROM directors
+UNION
+SELECT first_name, last_name FROM actors;
+
+
+-- Union All: Return the union of the selected columns from both tables and duplicated values included.
+
+/*
+SELECT column1, column2 FROM table1
+UNION ALL
+SELECT column1, column2 FROM table2;
+*/
+
+SELECT first_name FROM directors
+UNION
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+SELECT first_name FROM directors
+UNION ALL
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+-- Select the first names, last names and dates of birth from directors and actors. Order the results by the date of birth.
+SELECT first_name, last_name, date_of_birth FROM directors
+UNION ALL
+SELECT first_name, last_name, date_of_birth FROM actors
+ORDER BY date_of_birth;
+
+-- Select the first and last names of all directors and actors born in the 1960s. Order the results by last name.
+SELECT first_name, last_name FROM directors
+WHERE date_of_birth BETWEEN '1960-01-01' AND '1969-12-31'
+UNION ALL
+SELECT first_name, last_name FROM actors
+WHERE date_of_birth BETWEEN '1960-01-01' AND '1969-12-31'
+ORDER BY last_name;
+
+-- Intersect
+
+/*
+SELECT column1 FROM table1
+INTERSECT
+SELECT column1 FROM table2;
+*/
+
+SELECT first_name FROM directors
+INTERSECT
+SELECT first_name FROM actors;
+
+SELECT first_name FROM directors
+INTERSECT
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+SELECT first_name FROM directors
+WHERE nationality = 'American'
+INTERSECT
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+
+-- Except
+
+/*
+SELECT column1 FROM table1
+EXCEPT
+SELECT column1 FROM table2;
+*/
+
+SELECT first_name FROM directors
+EXCEPT
+SELECT first_name FROM actors;
+
+SELECT first_name FROM directors
+EXCEPT
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+SELECT first_name FROM directors
+WHERE nationality = 'American'
+EXCEPT
+SELECT first_name FROM actors
+ORDER BY first_name;
+
+-- Intersect the first name, last name and date of birth columns in the directors and actors tables.
+SELECT first_name, last_name, date_of_birth FROM directors
+INTERSECT
+SELECT first_name, last_name, date_of_birth FROM actors;
+
+-- Retrieve the first names of male actors unless they have the same first name as any British directors.
+SELECT first_name FROM actors
+WHERE gender = 'M'
+EXCEPT
+SELECT first_name FROM directors
+WHERE nationality = 'British';
