@@ -121,3 +121,61 @@ SELECT d.director_id, d.first_name, d.last_name, mo.movie_name FROM directors d
 FULL JOIN movies mo ON d.director_id = mo.director_id
 WHERE mo.movie_lang IN ('German', 'Korean')
 ORDER BY d.last_name;
+
+-- Use a left join to select the first and last names of all British directors and the names and age certificates of the movies 
+-- that they directed.
+SELECT d.first_name, d.last_name, mo.movie_name, mo.age_certificate FROM directors d
+LEFT JOIN movies mo ON d.director_id = mo.director_id
+WHERE d.nationality = 'British';
+
+-- Count the number of movies that each directors has directed.
+SELECT d.first_name, d.last_name, COUNT(mo.movie_id) FROM directors d
+LEFT JOIN movies mo ON d.director_id = mo.director_id
+GROUP BY d.first_name, d.last_name;
+
+-- Joining More Than Two Tables
+
+/*
+SELECT t1.column, t2.column, t3.column FROM table t1
+JOIN table2 t2 ON t1.column = t2.column
+JOIN table3 t3 ON t3.column = t2.column;
+*/
+
+SELECT d.first_name, d.last_name, mo.movie_name, mr.international_takings, mr.domestic_takings 
+FROM directors d
+JOIN movies mo ON d.director_id = mo.director_id
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id;
+
+SELECT ac.first_name, ac.last_name, mo.movie_name FROM actors ac
+JOIN movies_actors ma ON ac.actor_id = ma.actor_id
+JOIN movies mo ON mo.movie_id = ma.movie_id;
+
+SELECT ac.first_name, ac.last_name, mo.movie_name FROM actors ac
+JOIN movies_actors ma ON ac.actor_id = ma.actor_id
+JOIN movies mo ON mo.movie_id = ma.movie_id
+WHERE mo.movie_lang = 'English'
+ORDER BY mo.movie_name;
+
+SELECT d.first_name AS director_first_name, d.last_name AS director_surname, mo.movie_name, ac.first_name AS actor_first_name, ac.last_name AS actor_surname, mr.domestic_takings, mr.international_takings
+FROM directors d
+JOIN movies mo ON mo.director_id = d.director_id
+JOIN movies_actors ma ON ma.movie_id = mo.movie_id
+JOIN actors ac ON ac.actor_id = ma.actor_id
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id;
+
+-- Select the first and last names of all the actors who have starred in movies directed by Wes Anderson.
+SELECT ac.first_name AS actor_first_name, ac.last_name AS actor_surname, mo.movie_name FROM actors ac
+JOIN movies_actors ma ON ma.actor_id = ac.actor_id
+JOIN movies mo ON mo.movie_id = ma.movie_id
+JOIN directors d ON d.director_id = mo.director_id
+WHERE d.first_name = 'Wes'
+AND d.last_name = 'Anderson';
+
+-- Which directors has the highest total domestic takings.
+SELECT d.first_name, d.last_name, SUM(mr.domestic_takings) AS total_dom_takings FROM directors d
+JOIN movies mo ON mo.director_id = d.director_id
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
+GROUP BY d.first_name, d.last_name
+HAVING SUM(mr.domestic_takings) IS NOT NULL
+ORDER BY SUM(mr.domestic_takings) DESC
+LIMIT 1;
