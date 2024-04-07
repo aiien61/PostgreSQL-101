@@ -4,8 +4,6 @@ import psycopg2 as pg
 with open("config.json", "r") as openfile:
 	db_config = json.load(openfile)
 
-
-
 conn = pg.connect(**db_config, dbname="movie_data")
 cur = conn.cursor()
 
