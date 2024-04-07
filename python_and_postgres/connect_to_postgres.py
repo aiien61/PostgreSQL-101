@@ -1,9 +1,10 @@
+import json
 import psycopg2 as pg
 
-conn = pg.connect(
-    host="localhost", dbname="postgres", user="postgres", 
-    password="YOUR_PASSWORD_FOR_POSTGRES", port=5432
-)
+with open('config.json', 'r') as openfile:
+    config = json.load(openfile)
+
+conn = pg.connect(**config, dbname="postgres")
 
 cur = conn.cursor()
 # cur.execute("""CREATE TABLE IF NOT EXISTS person(
@@ -42,6 +43,8 @@ sql = cur.mogrify("""SELECT * FROM person WHERE starts_with(name, %s) AND age < 
 print(sql)
 cur.execute(sql)
 print(cur.fetchall())
+
+cur.execute("DROP TABLE person;")
 
 conn.commit()
 cur.close()
