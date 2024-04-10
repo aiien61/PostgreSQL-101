@@ -58,6 +58,23 @@ ORDER BY date_of_birth DESC
 LIMIT 10
 """
 
+QUERY11 = """
+SELECT * FROM movie_revenues
+WHERE international_takings IS NOT NULL
+ORDER BY international_takings DESC
+LIMIT 3;
+"""
+
+QUERY12 = """
+SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM directors;
+"""
+
+QUERY13 = """
+SELECT * FROM actors
+WHERE first_name IS NULL 
+OR date_of_birth IS NULL;
+"""
+
 def select(cursor, query) -> None:
     cursor.execute(query)
     return None
@@ -71,7 +88,7 @@ def main():
         connection = pg.connect(**config, dbname="movie_data")
         cursor = connection.cursor()
         
-        select(cursor, QUERY10)
+        select(cursor, QUERY13)
         
         connection.commit()
 
