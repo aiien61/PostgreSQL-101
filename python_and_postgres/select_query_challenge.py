@@ -3,80 +3,104 @@ import pandas as pd
 import psycopg2 as pg
 
 
-QUERY1 = """
+QUERY = """
 SELECT movie_name, release_date FROM movies;
 """
 
-QUERY2 = """
+QUERY = """
 SELECT first_name, last_name FROM directors
 WHERE nationality = 'American';
 """
 
-QUERY3 = """
+QUERY = """
 SELECT * FROM actors
 WHERE gender = 'M'
 AND date_of_birth > '1970-01-01';
 """
 
-QUERY4 = """
+QUERY = """
 SELECT movie_name FROM movies
 WHERE movie_length > 90
 AND movie_lang = 'English';
 """
 
-QUERY5 = """
+QUERY = """
 SELECT movie_name, movie_lang FROM movies
 WHERE movie_lang IN ('English', 'Spanish', 'Korean');
 """
 
-QUERY6 = """
+QUERY = """
 SELECT first_name, last_name FROM actors
 WHERE last_name LIKE 'M%'
 AND date_of_birth BETWEEN '1940-01-01' AND '1969-12-31';
 """
 
-QUERY7 = """
+QUERY = """
 SELECT first_name, last_name FROM directors
 WHERE nationality IN ('British', 'French', 'German')
 AND date_of_birth BETWEEN '1950-01-01' AND '1980-12-31';
 """
 
-QUERY8 = """
+QUERY = """
 SELECT * FROM directors
 WHERE nationality = 'American'
 ORDER BY date_of_birth ASC
 """
 
-QUERY9 = """
+QUERY = """
 SELECT DISTINCT nationality FROM directors
 """
 
-QUERY10 = """
+QUERY = """
 SELECT first_name, last_name, date_of_birth FROM actors
 WHERE gender = 'F'
 ORDER BY date_of_birth DESC
 LIMIT 10
 """
 
-QUERY11 = """
+QUERY = """
 SELECT * FROM movie_revenues
 WHERE international_takings IS NOT NULL
 ORDER BY international_takings DESC
 LIMIT 3;
 """
 
-QUERY12 = """
+QUERY = """
 SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM directors;
 """
 
-QUERY13 = """
+QUERY = """
 SELECT * FROM actors
 WHERE first_name IS NULL 
 OR date_of_birth IS NULL;
 """
 
-def select(cursor, query) -> None:
-    cursor.execute(query)
+QUERY = """
+SELECT COUNT(*) FROM actors
+WHERE date_of_birth > '1970-01-01';
+"""
+
+QUERY = """
+SELECT MAX(domestic_takings), MIN(domestic_takings) FROM movie_revenues;
+"""
+
+QUERY = """
+SELECT SUM(movie_length) FROM movies
+WHERE age_certificate = '15';
+"""
+
+QUERY = """
+SELECT COUNT(*) FROM directors
+WHERE nationality = 'Japanese';
+"""
+
+QUERY = """
+SELECT AVG(movie_length) FROM movies
+WHERE movie_lang = 'Chinese';
+"""
+
+def select(cursor) -> None:
+    cursor.execute(QUERY)
     return None
 
 
@@ -88,7 +112,7 @@ def main():
         connection = pg.connect(**config, dbname="movie_data")
         cursor = connection.cursor()
         
-        select(cursor, QUERY13)
+        select(cursor)
         
         connection.commit()
 
