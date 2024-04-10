@@ -41,6 +41,22 @@ WHERE nationality IN ('British', 'French', 'German')
 AND date_of_birth BETWEEN '1950-01-01' AND '1980-12-31';
 """
 
+QUERY8 = """
+SELECT * FROM directors
+WHERE nationality = 'American'
+ORDER BY date_of_birth ASC
+"""
+
+QUERY9 = """
+SELECT DISTINCT nationality FROM directors
+"""
+
+QUERY10 = """
+SELECT first_name, last_name, date_of_birth FROM actors
+WHERE gender = 'F'
+ORDER BY date_of_birth DESC
+LIMIT 10
+"""
 
 def select(cursor, query) -> None:
     cursor.execute(query)
@@ -55,7 +71,7 @@ def main():
         connection = pg.connect(**config, dbname="movie_data")
         cursor = connection.cursor()
         
-        select(cursor, QUERY7)
+        select(cursor, QUERY10)
         
         connection.commit()
 
