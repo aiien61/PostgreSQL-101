@@ -99,6 +99,23 @@ SELECT AVG(movie_length) FROM movies
 WHERE movie_lang = 'Chinese';
 """
 
+QUERY = """
+SELECT nationality, COUNT(*) FROM directors
+GROUP BY nationality;
+"""
+
+QUERY = """
+SELECT age_certificate, movie_lang, SUM(movie_length) FROM movies
+GROUP BY age_certificate, movie_lang
+"""
+
+QUERY = """
+SELECT movie_lang, SUM(movie_length) FROM movies
+GROUP BY movie_lang
+HAVING SUM(movie_length) > 500
+"""
+
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
