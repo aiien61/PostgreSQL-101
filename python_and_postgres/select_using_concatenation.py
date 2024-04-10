@@ -22,6 +22,7 @@ QUERY5 = """
 SELECT first_name || ' ' || last_name AS full_name FROM actors;
 """
 
+# the first argument to be the separator in the concatenated string
 QUERY6 = """
 SELECT CONCAT_WS(' ', first_name, last_name) AS full_name FROM actors;
 """
