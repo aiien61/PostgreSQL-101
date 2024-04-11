@@ -138,6 +138,20 @@ OR mr.domestic_takings IS NULL
 ORDER BY mo.movie_name;
 """
 
+QUERY = """
+SELECT d.first_name, d.last_name, mo.movie_name, mo.age_certificate
+FROM directors d
+LEFT JOIN movies mo ON d.director_id = mo.director_id
+WHERE d.nationality = 'British';
+"""
+
+QUERY = """
+SELECT d.first_name, d.last_name, COUNT(mo.movie_id)
+FROM directors d
+LEFT JOIN movies mo ON d.director_id = mo.director_id
+GROUP BY d.first_name, d.last_name;
+"""
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
