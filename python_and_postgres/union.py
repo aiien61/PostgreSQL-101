@@ -5,6 +5,7 @@ import psycopg2 as pg
 
 # SQL: Must select same number of columns from both tables, and columns selected
 # from both tables must be corresponding to each other e.g. compatible data type
+
 # SELECT column1, column2 FROM table1
 # UNION
 # SELECT column1, column2 FROM table2
@@ -39,6 +40,28 @@ SELECT date_of_birth, last_name FROM directors
 UNION
 SELECT first_name, last_name FROM actors;
 """
+
+# SELECT column1, column2 FROM table1
+# UNION ALL
+# SELECT column1, column2 FROM table2
+
+# auto remove duplicated first names
+QUERY = """
+SELECT first_name FROM directors
+UNION
+SELECT first_name FROM actors
+ORDER BY first_name;
+"""
+
+# auto keep duplicated first names
+QUERY = """
+SELECT first_name FROM directors
+UNION ALL
+SELECT first_name FROM actors
+ORDER BY first_name;
+"""
+
+# UNION exclude duplicated records but UNION ALL include duplicated records
 
 def select(cursor) -> None:
     cursor.execute(QUERY)
