@@ -204,6 +204,66 @@ SELECT first_name FROM directors
 WHERE nationality = 'British';
 """
 
+# Select the first and last names of all the actors older than Marlon Brando
+QUERY = """
+SELECT first_name, last_name FROM actors
+WHERE date_of_birth < 
+(SELECT date_of_birth FROM actors
+WHERE first_name = 'Marlon' AND last_name = 'Brando');
+"""
+
+# Select the movie names of all movies that have domestic takings above 300 million.
+# Sol 1
+QUERY = """
+SELECT mo.movie_name FROM movies mo
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
+WHERE mr.domestic_takings > 300;
+"""
+# Sol 2
+QUERY = """
+SELECT movie_name FROM movies
+WHERE movie_id IN 
+(SELECT movie_id FROM movie_revenues
+WHERE domestic_takings > 300.0);
+"""
+
+# Return the shortest and longest movie length for movies with an above average domestic takings
+# Sol 1
+QUERY = """
+SELECT MIN(movie_length), MAX(movie_length) FROM movies
+WHERE movie_id IN
+(
+    SELECT movie_id FROM movie_revenues
+    WHERE domestic_takings > 
+    (SELECT AVG(domestic_takings) FROM movie_revenues)
+);
+"""
+# Sol 2
+QUERY = """
+SELECT MIN(mo.movie_length), MAX(mo.movie_length) FROM movies mo
+JOIN movie_revenues mr ON mo.movie_id = mr.movie_id
+WHERE mr.domestic_takings > 
+(SELECT AVG(domestic_takings) FROM movie_revenues);
+"""
+
+# Select the first name, last name and date of birth for the oldest actors of each gender.
+QUERY = """
+SELECT ac1.first_name, ac1.last_name, ac1.date_of_birth FROM actors ac1
+WHERE ac1.date_of_birth = 
+(SELECT MIN(ac2.date_of_birth) FROM actors ac2
+WHERE ac2.gender = ac1.gender);
+"""
+
+# Select the movie name, movie length and age certificate for movies with 
+# an above average length for their age certificate.
+QUERY = """
+SELECT mo1.movie_name, mo1.movie_length, mo1.age_certificate FROM movies mo1
+WHERE mo1.movie_length > 
+(SELECT AVG(mo2.movie_length) FROM movies mo2
+WHERE mo2.age_certificate = mo1.age_certificate)
+ORDER BY mo1.age_certificate ASC, mo1.movie_length DESC;
+"""
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
