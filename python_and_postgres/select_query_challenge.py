@@ -162,7 +162,7 @@ WHERE d.first_name = 'Wes' AND d.last_name = 'Anderson';
 """
 
 QUERY = """
-SELECT d.first_name, d.last_name, SUM(mr.domestic_takings) as total_domestic_takings
+SELECT d.first_name, d.last_name, SUM(mr.domestic_takings) AS total_domestic_takings
 FROM directors d
 JOIN movies mo ON mo.director_id = d.director_id
 JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
