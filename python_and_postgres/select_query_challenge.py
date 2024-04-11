@@ -152,6 +152,26 @@ LEFT JOIN movies mo ON d.director_id = mo.director_id
 GROUP BY d.first_name, d.last_name;
 """
 
+QUERY = """
+SELECT ac.first_name, ac.last_name, mo.movie_name, d.first_name, d.last_name
+FROM actors ac
+JOIN movies_actors ma ON ma.actor_id = ac.actor_id
+JOIN movies mo ON mo.movie_id = ma.movie_id
+JOIN directors d ON d.director_id = mo.director_id
+WHERE d.first_name = 'Wes' AND d.last_name = 'Anderson';
+"""
+
+QUERY = """
+SELECT d.first_name, d.last_name, SUM(mr.domestic_takings) as total_domestic_takings
+FROM directors d
+JOIN movies mo ON mo.director_id = d.director_id
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
+WHERE mr.domestic_takings IS NOT NULL
+GROUP BY d.first_name, d.last_name
+ORDER BY total_domestic_takings DESC
+LIMIT 1;
+"""
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
