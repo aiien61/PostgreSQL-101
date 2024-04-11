@@ -106,15 +106,37 @@ GROUP BY nationality;
 
 QUERY = """
 SELECT age_certificate, movie_lang, SUM(movie_length) FROM movies
-GROUP BY age_certificate, movie_lang
+GROUP BY age_certificate, movie_lang;
 """
 
 QUERY = """
 SELECT movie_lang, SUM(movie_length) FROM movies
 GROUP BY movie_lang
-HAVING SUM(movie_length) > 500
+HAVING SUM(movie_length) > 500;
 """
 
+QUERY = """
+SELECT d.first_name, d.last_name, mo.movie_name, mo.release_date
+FROM directors d
+INNER JOIN movies mo USING (director_id)
+WHERE mo.movie_lang IN ('Chinese', 'Korean', 'Japanese');
+"""
+
+QUERY = """
+SELECT mo.movie_name, mo.release_date, mr.international_takings
+FROM movie_revenues mr
+INNER JOIN movies mo ON mo.movie_id = mr.movie_id
+WHERE mo.movie_lang = 'English';
+"""
+
+QUERY = """
+SELECT mo.movie_name, mr.domestic_takings, mr.international_takings
+FROM movie_revenues mr
+INNER JOIN movies mo ON mo.movie_id = mr.movie_id
+WHERE mr.international_takings IS NULL
+OR mr.domestic_takings IS NULL
+ORDER BY mo.movie_name;
+"""
 
 def select(cursor) -> None:
     cursor.execute(QUERY)
