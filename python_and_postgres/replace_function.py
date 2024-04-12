@@ -3,7 +3,7 @@ import pandas as pd
 import psycopg2 as pg
 
 
-# SELECT REPLACE('source string', 'old string', 'new string)
+# SELECT REPLACE('source string', 'old string', 'new string')
 
 QUERY = """
 SELECT REPLACE('a cat plays with another cat', 'cat', 'dog');
