@@ -264,6 +264,35 @@ WHERE mo2.age_certificate = mo1.age_certificate)
 ORDER BY mo1.age_certificate ASC, mo1.movie_length DESC;
 """
 
+# Select the directors' first and last names and movie names in upper case.
+QUERY = """
+SELECT UPPER(d.first_name), UPPER(d.last_name), UPPER(mo.movie_name)
+FROM directors d
+INNER JOIN movies mo ON mo.director_id = d.director_id;
+"""
+
+# Select the first and last names, in initial capitalisation format, 
+# of all the actors who have starred in a Chinese or Korean movie.
+QUERY = """
+SELECT INITCAP(ac.first_name), INITCAP(ac.last_name)
+FROM actors ac
+JOIN movies_actors ma ON ma.actor_id = ac.actor_id
+JOIN movies mo ON mo.movie_id = ma.movie_id
+WHERE mo.movie_lang IN ('Chinese', 'Korean');
+"""
+
+# Retrieve the reversed first and last names of each directors and the first three characters of their nationality
+QUERY = """
+SELECT REVERSE(first_name) AS first_name, REVERSE(last_name) AS last_name, LEFT(nationality, 3) AS nationality
+FROM directors;
+"""
+
+# Retrieve the initials of each director and display it in one column named 'initials'.
+QUERY = """
+SELECT CONCAT(LEFT(INITCAP(first_name), 1), '.', LEFT(INITCAP(last_name), 1)) AS initials
+FROM directors
+"""
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
