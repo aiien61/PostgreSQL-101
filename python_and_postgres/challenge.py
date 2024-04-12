@@ -293,6 +293,53 @@ SELECT CONCAT(LEFT(first_name, 1), '.', LEFT(last_name, 1)) AS initials
 FROM directors
 """
 
+# Use the substring function to retrieve the first 6 characters of each movie name and the year they released
+QUERY = """
+SELECT SUBSTRING(movie_name, 1, 6) AS movie_name, SUBSTRING(release_date::TEXT, 1, 4) AS year
+FROM movies;
+"""
+
+# Retrieve the first name initial and last name of every actor born in May.
+QUERY = """
+SELECT SUBSTRING(first_name, 1, 1) AS fn_initial, last_name, date_of_birth
+FROM actors
+WHERE SPLIT_PART(date_of_birth::TEXT, '-', 2) = '05';
+"""
+
+# Replace the movie language for all English language movies, with age certificate rating 18, to 'Eng'.
+QUERY = """
+UPDATE movies
+SET movie_lang = REPLACE(movie_lang, 'English', 'Eng')
+WHERE age_certificate = '18';
+"""
+
+# Return the movie names and whether they were international box office smashes, hits or flops.
+QUERY = """
+SELECT mo.movie_name,
+CASE
+    WHEN mr.international_takings >= 300 THEN 'BOX OFFICE SMASH'
+    WHEN mr.international_takings >= 100 THEN 'BOX OFFICE HIT'
+    WHEN mr.international_takings >= 0 THEN 'BOX OFFICE FLOP'
+    ELSE 'MISSING INFO'
+END box_office_success
+FROM movies mo
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
+"""
+
+# Return the continent that the directors are from based off of their nationality
+QUERY = """
+SELECT first_name, last_name,
+CASE
+    WHEN nationality IN ('American', 'Canadian', 'Mexican') THEN 'North America'
+    WHEN nationality = 'Brazilian' THEN 'South America'
+    WHEN nationality IN ('British', 'German', 'French', 'Swedish') THEN 'Europe'
+    WHEN nationality IN ('Chinese', 'Japanese', 'South Korean') THEN 'Asia'
+    WHEN nationality = 'Australian' THEN 'Australia'
+END continent
+FROM directors;
+"""
+
+
 def select(cursor) -> None:
     cursor.execute(QUERY)
     return None
