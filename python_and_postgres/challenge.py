@@ -266,15 +266,15 @@ ORDER BY mo1.age_certificate ASC, mo1.movie_length DESC;
 
 # Select the directors' first and last names and movie names in upper case.
 QUERY = """
-SELECT UPPER(d.first_name), UPPER(d.last_name), UPPER(mo.movie_name)
+SELECT UPPER(d.first_name) AS first_name, UPPER(d.last_name) AS last_name, UPPER(m.movie_name) AS movie_name
 FROM directors d
-INNER JOIN movies mo ON mo.director_id = d.director_id;
+INNER JOIN movies m ON m.director_id = d.director_id;
 """
 
 # Select the first and last names, in initial capitalisation format, 
 # of all the actors who have starred in a Chinese or Korean movie.
 QUERY = """
-SELECT INITCAP(ac.first_name), INITCAP(ac.last_name)
+SELECT DISTINCT INITCAP(ac.first_name) AS first_name, INITCAP(ac.last_name) AS last_name
 FROM actors ac
 JOIN movies_actors ma ON ma.actor_id = ac.actor_id
 JOIN movies mo ON mo.movie_id = ma.movie_id
@@ -289,7 +289,7 @@ FROM directors;
 
 # Retrieve the initials of each director and display it in one column named 'initials'.
 QUERY = """
-SELECT CONCAT(LEFT(INITCAP(first_name), 1), '.', LEFT(INITCAP(last_name), 1)) AS initials
+SELECT CONCAT(LEFT(first_name, 1), '.', LEFT(last_name, 1)) AS initials
 FROM directors
 """
 
