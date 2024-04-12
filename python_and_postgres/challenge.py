@@ -371,6 +371,27 @@ JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
 GROUP BY mo.age_certificate;
 """
 
+# Return the movie names, movie languages and age certificates - 
+# return NULL if the movie language is English or the age certificate is U
+QUERY = """
+SELECT movie_name, NULLIF(movie_lang, 'English') AS movie_language, NULLIF(age_certificate, 'U') AS age_certificate
+FROM movies;
+"""
+
+# Return a column which contains the difference in values between the domestic takings 
+# and international takings for each movie
+QUERY = """
+SELECT mo.movie_name, (COALESCE(mr.domestic_takings, 0) - COALESCE(mr.international_takings, 0)) AS difference
+FROM movies mo
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id;
+"""
+
+# if forcing to get absolute values
+QUERY = """
+SELECT mo.movie_name, ABS(COALESCE(mr.domestic_takings, 0) - COALESCE(mr.international_takings, 0)) AS difference
+FROM movies mo
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id;
+"""
 
 def select(cursor) -> None:
     cursor.execute(QUERY)
