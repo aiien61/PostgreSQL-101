@@ -317,11 +317,11 @@ WHERE age_certificate = '18';
 QUERY = """
 SELECT mo.movie_name,
 CASE
-    WHEN mr.international_takings >= 300 THEN 'BOX OFFICE SMASH'
-    WHEN mr.international_takings >= 100 THEN 'BOX OFFICE HIT'
-    WHEN mr.international_takings >= 0 THEN 'BOX OFFICE FLOP'
+    WHEN mr.international_takings >= 300 THEN 'International Box Office Smash'
+    WHEN mr.international_takings >= 100 THEN 'International Box Office Hit'
+    WHEN mr.international_takings >= 0 THEN 'International Box Office Flop'
     ELSE 'MISSING INFO'
-END box_office_success
+END international_box_office
 FROM movies mo
 JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
 """
@@ -330,13 +330,45 @@ JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
 QUERY = """
 SELECT first_name, last_name,
 CASE
-    WHEN nationality IN ('American', 'Canadian', 'Mexican') THEN 'North America'
-    WHEN nationality = 'Brazilian' THEN 'South America'
+    WHEN nationality IN ('American', 'Mexican') THEN 'North America'
+    WHEN nationality IN ('Brazilian') THEN 'South America'
     WHEN nationality IN ('British', 'German', 'French', 'Swedish') THEN 'Europe'
     WHEN nationality IN ('Chinese', 'Japanese', 'South Korean') THEN 'Asia'
-    WHEN nationality = 'Australian' THEN 'Australia'
+    WHEN nationality IN ('Australian') THEN 'Oceania'
+    ELSE 'no info'
 END continent
 FROM directors;
+"""
+
+# Return the number of movies suitable for children (U, PG) and not suitable for children (12, 15, 18)
+QUERY = """
+SELECT 
+CASE
+	WHEN age_certificate IN ('U', 'PG') THEN 'suitable'
+	ELSE 'not suitable'
+END children,
+COUNT(1) AS Total
+FROM movies
+GROUP BY
+CASE
+	WHEN age_certificate IN ('U', 'PG') THEN 'suitable'
+	ELSE 'not suitable'
+END;
+"""
+
+# For each age certificate: return an average of the domestic takings for English language movies and 
+# international takings for non-English language movies
+QUERY = """
+SELECT mo.age_certificate,
+AVG(
+	CASE
+		WHEN mo.movie_lang = 'English' THEN mr.domestic_takings
+		ELSE mr.international_takings
+	END
+) AS takings
+FROM movies mo
+JOIN movie_revenues mr ON mr.movie_id = mo.movie_id
+GROUP BY mo.age_certificate;
 """
 
 

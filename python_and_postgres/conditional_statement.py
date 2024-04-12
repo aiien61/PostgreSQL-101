@@ -66,7 +66,70 @@ END box_office_success
 FROM movie_revenues;
 """
 
+QUERY = """
+SELECT 
+CASE
+    WHEN nationality = 'British' THEN 'UK'
+    ELSE 'Not UK' 
+END British,
+COUNT(1) AS count
+FROM directors
+GROUP BY 
+CASE 
+    WHEN nationality = 'British' THEN 'UK' 
+    ELSE 'Not UK' 
+END;
+"""
 
+QUERY = """
+SELECT 
+CASE
+    WHEN nationality = 'British' THEN 'UK'
+    WHEN nationality = 'French' THEN 'France'
+    WHEN nationality = 'German' THEN 'Germany'
+    WHEN nationality = 'Swedish' THEN 'Sweden'
+    ELSE 'Not European' 
+END European,
+COUNT(1) AS tally
+FROM directors
+GROUP BY 
+CASE 
+    WHEN nationality = 'British' THEN 'UK' 
+    WHEN nationality = 'French' THEN 'France'
+    WHEN nationality = 'German' THEN 'Germany'
+    WHEN nationality = 'Swedish' THEN 'Sweden'
+    ELSE 'Not European' 
+END;
+"""
+
+QUERY = """
+SELECT 
+SUM(
+    CASE 
+        WHEN movie_length BETWEEN 0 AND 90 THEN 1 
+        ELSE 0 
+    END
+) AS Short,
+SUM(
+    CASE 
+        WHEN movie_length BETWEEN 91 AND 120 THEN 1 
+        ELSE 0 
+    END
+) AS Medium,
+SUM(
+    CASE 
+        WHEN movie_length BETWEEN 121 AND 150 THEN 1 
+        ELSE 0 
+    END
+) AS Long,
+SUM(
+    CASE 
+        WHEN movie_length > 150 THEN 1 
+        ELSE 0 
+    END
+) AS "Very Long"
+FROM movies;
+"""
 
 
 def select(cursor) -> None:
